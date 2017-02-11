@@ -10,7 +10,7 @@ matrix:
 	python random-matrix.py $(matrix-size) $(matrix-size)
 
 matrix2:
-	pythong random-matrix.py $(matrix-size) $(matrix-size2)
+	python random-matrix.py $(matrix-size2) $(matrix-size2)
 
 build: matrix
 	g++ -o svd.out svd.cpp -fopenmp
