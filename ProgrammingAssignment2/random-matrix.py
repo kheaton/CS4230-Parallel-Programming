@@ -12,7 +12,7 @@ if (len(sys.argv) > 2):
   m = sys.argv[1]
   n = sys.argv[2]
 
-  f = open('matrix','w');
+  f = open('matrix','w')
 
 
   table= [ [ 0 for i in range(M) ] for j in range(N) ]
@@ -37,9 +37,5 @@ if (len(sys.argv) > 2):
     for i in range(M):
      print table2[i]
 
-
-
 else:
-
   print "please input two numbers"
-
