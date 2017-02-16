@@ -28,6 +28,7 @@
 #include <fstream>
 #include <sys/time.h>
 #include <string>
+#include <sstream>
 
 #define epsilon 1.e-8
 #define DEBUG false
@@ -51,6 +52,20 @@ void printDebugMessage(string message)
 void printLine()
 {
 	cout << "----------------------------------------------------" << endl;
+}
+
+template <typename T>
+string to_string(T value)
+{
+	ostringstream sout;
+	sout << value;
+	return sout.str();
+}
+
+template <typename T>
+int array_size(T* array)
+{
+	return sizeof(array) / sizeof(array[0]);
 }
 
 int main(int argc, char *argv[])
@@ -110,6 +125,8 @@ int main(int argc, char *argv[])
 	//double c, s;
 	double *c, *s;
 
+	c = new double[N];
+	s = new double[N];
 
     int acum = 0;
     int temp1, temp2;
@@ -210,21 +227,30 @@ int main(int argc, char *argv[])
 		// Then can parallelize j loop
 
 		
-
 		//this isn't working either
 		//#pragma omp parallel for
 		for (int i = 1; i < M; i++)
 		{
+			printDebugMessage("i = " + to_string(i));
+			
+
 			// Make alpha, beta, and gamma private to be able to make parallelized
 
-			c = new double[i];
-			s = new double[i];
+			#pragma omp parallel for
+			for(int j = 0; j < N; j++)
+			{
+				c[j] = 0;
+				s[j] = 0;
+			}
 
+			
 			//this isn't working
 			//#pragma omp parallel for private(alpha, beta, gamma, converge), reduction(max:converge)
-			#pragma omp parallel for private(alpha, beta, gamma), reduction(max:converge)
+			//#pragma omp parallel for private(alpha, beta, gamma), reduction(max:converge)
 			for (int j = 0; j < i; j++)
 			{
+				printDebugMessage("j = " + to_string(j));
+				
 
 				alpha = 0.0;
 				beta = 0.0;
@@ -254,10 +280,10 @@ int main(int argc, char *argv[])
 				// U_t[j,k] is loop independent
 				// U_t[i, k] is loop independent since k is the only thing that is changing each loop, even though j and i might 
 				// refer to the same location, it isn't changing from one iteration to the next
-			}
-			for (int j = 0; j < i; j++)
-			{
-				#pragma omp parallel for private(t)
+			//}
+			//for (int j = 0; j < i; j++)
+			//{
+			//	#pragma omp parallel for private(t)
 				for (int k = 0; k < N; k++)
 				{
 					t = U_t[i][k];
@@ -270,10 +296,13 @@ int main(int argc, char *argv[])
 				}
 			}
 
-			delete c;
-			delete s;
+			printDebugMessage("End j loop");
 		}
+		printDebugMessage("End i loop");
     }
+	printDebugMessage("End while loop");
+
+
 
     //Create matrix S
 	// U_t is loop independent - safe
@@ -480,6 +509,9 @@ int main(int argc, char *argv[])
 
 		Sf.close();
     }
+
+	delete[] c;
+	delete[] s;
 
     delete[] S;
     for (int i = 0; i < N; i++)
