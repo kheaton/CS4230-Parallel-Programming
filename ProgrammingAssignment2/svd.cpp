@@ -239,7 +239,6 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < M; i++)
     {
-
 		t = 0;
 		for (int j = 0; j < N; j++)
 		{

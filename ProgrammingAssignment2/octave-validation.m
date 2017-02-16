@@ -13,7 +13,10 @@ ResU1 = abs(mean(mean(Ucpu)));
 ResS1 = abs(mean(mean(Scpu)));
 ResV1 = abs(mean(mean(Vcpu)));
 
-ru = abs(ResU - ResU1)
-rv = abs(ResV - ResV1)
-rs = abs(ResS - ResS1)
+ru = abs(ResU - ResU1);
+rv = abs(ResV - ResV1);
+rs = abs(ResS - ResS1);
 
+disp("ru: "), disp(ru);
+disp("rv: "), disp(rv);
+disp("rs: "), disp(rs);
