@@ -1,5 +1,4 @@
-matrix-size = 128
-matrix-size2 = 512
+matrix-size = 256
 
 clean:
 	rm *.out -f
@@ -11,12 +10,23 @@ matrix:
 
 build: matrix
 	g++ -o svd.out svd.cpp -fopenmp
+	g++ -o svd-seq.out svd.cpp
 
 run: build
 	./svd.out $(matrix-size) $(matrix-size) -t -n -do
 
+runs: build
+	./svd-seq.out $(matrix-size) $(matrix-size) -t -n -do 
+
 run-v: build
 	./svd.out $(matrix-size) $(matrix-size) -t -p -do
+
+runs-v: build
+	./svd-seq.out $(matrix-size) $(matrix-size) -t -p -do
+
+run-both: run runs
+
+run-both-v: run-v runs-v
 
 rebuild: clean build
 

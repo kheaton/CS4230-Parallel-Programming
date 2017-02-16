@@ -104,10 +104,12 @@ int main(int argc, char *argv[])
 			}
 		}
     }
-    // cout<<T<<P<<endl;
 
     double **U, **V, *S, **U_t, **V_t, **A;
-    double alpha, beta, gamma, c, zeta, t, s, sub_zeta, converge;
+    double alpha, beta, gamma, zeta, t, sub_zeta, converge;
+	//double c, s;
+	double *c, *s;
+
 
     int acum = 0;
     int temp1, temp2;
@@ -170,7 +172,6 @@ int main(int argc, char *argv[])
 	printDebugMessage("Initilized V_t");
 
     //Store A for debug purpouse
-
     for (int i = 0; i < M; i++)
     {
 		for (int j = 0; j < N; j++)
@@ -194,8 +195,34 @@ int main(int argc, char *argv[])
 
 		acum++; //counter of loops
 
+//#pragma omp parallel for private(i) shared(a,b) reduction(+:sum)  
+//#pragma omp parallel for
+//#pragma omp parallel for private(i,j) shared(n) schedule(dynamic,5000) reduction(+:not_primes)
+//#pragma omp parallel for private(j) reduction(+: not_primes) schedule(dynamic)
+//#pragma omp parallel num_threads(5)
+
+
+
+		// To make the j loop parallelizable we want to make alpha, beta, and gamme private
+		// Loop carried dependence on converge, it is a max, it is associative, can mark converge as a reduction reduction(max:converge)
+		// split j loop into two loops, the first ends after s = c * t;
+		// c and s need to be put in their own arrays and used in the second j loop (scalar expansion)
+		// Then can parallelize j loop
+
+		
+
+		//this isn't working either
+		//#pragma omp parallel for
 		for (int i = 1; i < M; i++)
 		{
+			// Make alpha, beta, and gamma private to be able to make parallelized
+
+			c = new double[i];
+			s = new double[i];
+
+			//this isn't working
+			//#pragma omp parallel for private(alpha, beta, gamma, converge), reduction(max:converge)
+			#pragma omp parallel for private(alpha, beta, gamma), reduction(max:converge)
 			for (int j = 0; j < i; j++)
 			{
 
@@ -203,6 +230,8 @@ int main(int argc, char *argv[])
 				beta = 0.0;
 				gamma = 0.0;
 
+				// Use a redcution for alpha, beta, and gamma. Can parallelize
+				#pragma omp parallel for reduction(+:alpha), reduction(+:beta), reduction(+:gamma)
 				for (int k = 0; k < N; k++)
 				{
 					alpha = alpha + (U_t[i][k] * U_t[i][k]);
@@ -210,42 +239,63 @@ int main(int argc, char *argv[])
 					gamma = gamma + (U_t[i][k] * U_t[j][k]);
 				}
 
-				converge = max(converge, abs(gamma) / sqrt(alpha * beta)); //compute convergence
-											//basicaly is the angle
-											//between column i and j
+				converge = max(converge, abs(gamma) / sqrt(alpha * beta)); 	//compute convergence
+																			//basicaly is the angle
+																			//between column i and j
 
 				zeta = (beta - alpha) / (2.0 * gamma);
-				t = sgn(zeta) / (abs(zeta) + sqrt(1.0 + (zeta * zeta))); //compute tan of angle
-				c = 1.0 / (sqrt(1.0 + (t * t)));			 //extract cos
-				s = c * t;						 //extrac sin
+				t = sgn(zeta) / (abs(zeta) + sqrt(1.0 + (zeta * zeta))); 	//compute tan of angle
+				c[j] = 1.0 / (sqrt(1.0 + (t * t)));			 				//extract cos
+				s[j] = c[j] * t;						 						//extrac sin
 
 				//Apply rotations on U and V
 
+				// OpenMP you can get around t. Mark it private and you don't have to worry about it anymore
+				// U_t[j,k] is loop independent
+				// U_t[i, k] is loop independent since k is the only thing that is changing each loop, even though j and i might 
+				// refer to the same location, it isn't changing from one iteration to the next
+			}
+			for (int j = 0; j < i; j++)
+			{
+				#pragma omp parallel for private(t)
 				for (int k = 0; k < N; k++)
 				{
 					t = U_t[i][k];
-					U_t[i][k] = c * t - s * U_t[j][k];
-					U_t[j][k] = s * t + c * U_t[j][k];
+					U_t[i][k] = c[j] * t - s[j] * U_t[j][k];
+					U_t[j][k] = s[j] * t + c[j] * U_t[j][k];
 
 					t = V_t[i][k];
-					V_t[i][k] = c * t - s * V_t[j][k];
-					V_t[j][k] = s * t + c * V_t[j][k];
+					V_t[i][k] = c[j] * t - s[j] * V_t[j][k];
+					V_t[j][k] = s[j] * t + c[j] * V_t[j][k];
 				}
 			}
+
+			delete c;
+			delete s;
 		}
     }
 
     //Create matrix S
-
+	// U_t is loop independent - safe
+	// S is loop independent - safe
+	// t is independent at i level - safe if make it private
+	//#pragma omp parallel for private(t)
     for (int i = 0; i < M; i++)
     {
 		t = 0;
+		// U_t is loop independent - safe
+    	// Could do a reduction here
+		#pragma omp parallel for reduction(+:t)
 		for (int j = 0; j < N; j++)
 		{
 			t = t + pow(U_t[i][j], 2);
 		}
 		t = sqrt(t);
 
+		// U_t is loop independent - safe
+		// S is loop independent. i == j one time - safe
+		// Can parallelize this loop inside of a parallelized i loop
+		#pragma omp parallel for
 		for (int j = 0; j < N; j++)
 		{
 			U_t[i][j] = U_t[i][j] / t;
@@ -258,9 +308,7 @@ int main(int argc, char *argv[])
 
     gettimeofday(&end, NULL);
     /************************************************************/
-
     /* Develop SVD Using OpenMP */
-
     // fix final result
 
     for (int i = 0; i < M; i++)
@@ -273,7 +321,6 @@ int main(int argc, char *argv[])
     }
 
     //Output time and iterations
-
     if (T == "-t" || P == "-t")
     {
 		cout << "iterations: " << acum << endl;
