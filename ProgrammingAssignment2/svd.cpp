@@ -243,10 +243,7 @@ int main(int argc, char *argv[])
 				s[j] = 0;
 			}
 
-			
-			//this isn't working
-			//#pragma omp parallel for private(alpha, beta, gamma, converge), reduction(max:converge)
-			//#pragma omp parallel for private(alpha, beta, gamma), reduction(max:converge)
+			#pragma omp parallel for private(alpha, beta, gamma, zeta, t), reduction(max:converge)
 			for (int j = 0; j < i; j++)
 			{
 				printDebugMessage("j = " + to_string(j));
@@ -257,7 +254,7 @@ int main(int argc, char *argv[])
 				gamma = 0.0;
 
 				// Use a redcution for alpha, beta, and gamma. Can parallelize
-				#pragma omp parallel for reduction(+:alpha), reduction(+:beta), reduction(+:gamma)
+				//#pragma omp parallel for reduction(+:alpha), reduction(+:beta), reduction(+:gamma)
 				for (int k = 0; k < N; k++)
 				{
 					alpha = alpha + (U_t[i][k] * U_t[i][k]);
@@ -265,7 +262,9 @@ int main(int argc, char *argv[])
 					gamma = gamma + (U_t[i][k] * U_t[j][k]);
 				}
 
-				converge = max(converge, abs(gamma) / sqrt(alpha * beta)); 	//compute convergence
+				converge = abs(gamma) / sqrt(alpha * beta);
+
+				//converge = max(converge, abs(gamma) / sqrt(alpha * beta)); 	//compute convergence
 																			//basicaly is the angle
 																			//between column i and j
 
@@ -280,10 +279,11 @@ int main(int argc, char *argv[])
 				// U_t[j,k] is loop independent
 				// U_t[i, k] is loop independent since k is the only thing that is changing each loop, even though j and i might 
 				// refer to the same location, it isn't changing from one iteration to the next
-			//}
-			//for (int j = 0; j < i; j++)
-			//{
-			//	#pragma omp parallel for private(t)
+			}
+
+			for (int j = 0; j < i; j++)
+			{
+				#pragma omp parallel for private(t)
 				for (int k = 0; k < N; k++)
 				{
 					t = U_t[i][k];
