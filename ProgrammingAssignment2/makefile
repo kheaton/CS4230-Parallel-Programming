@@ -1,4 +1,4 @@
-matrix-size = 256
+matrix-size = 512
 
 clean:
 	rm *.out -f
