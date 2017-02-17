@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
 				s[j] = 0;
 			}
 
-			#pragma omp parallel for private(alpha, beta, gamma, zeta, t), reduction(max:converge)
+			#pragma omp parallel for private(alpha, beta, gamma, zeta, t) reduction(max:converge)
 			for (int j = 0; j < i; j++)
 			{
 				printDebugMessage("j = " + to_string(j));
