@@ -123,10 +123,13 @@ int main(int argc, char *argv[])
     double **U, **V, *S, **U_t, **V_t, **A;
     double alpha, beta, gamma, zeta, t, sub_zeta, converge;
 	//double c, s;
+	
 	double *c, *s;
+	double *converge_array;
 
 	c = new double[N];
 	s = new double[N];
+	converge_array = new double[N];
 
     int acum = 0;
     int temp1, temp2;
@@ -241,9 +244,12 @@ int main(int argc, char *argv[])
 			{
 				c[j] = 0;
 				s[j] = 0;
+				converge_array[j] = 0.0;
 			}
 
-			#pragma omp parallel for private(alpha, beta, gamma, zeta, t) reduction(max:converge)
+			//Unable to run this reduction on kingspeak
+			//#pragma omp parallel for private(alpha, beta, gamma, zeta, t) reduction(max:converge)
+			#pragma omp parallel for private(alpha, beta, gamma, zeta, t)
 			for (int j = 0; j < i; j++)
 			{
 				printDebugMessage("j = " + to_string(j));
@@ -262,7 +268,9 @@ int main(int argc, char *argv[])
 					gamma = gamma + (U_t[i][k] * U_t[j][k]);
 				}
 
-				converge = abs(gamma) / sqrt(alpha * beta);
+				converge_array[j] = abs(gamma) / sqrt(alpha * beta);
+
+				//converge = abs(gamma) / sqrt(alpha * beta);
 
 				//converge = max(converge, abs(gamma) / sqrt(alpha * beta)); 	//compute convergence
 																			//basicaly is the angle
@@ -280,6 +288,18 @@ int main(int argc, char *argv[])
 				// U_t[i, k] is loop independent since k is the only thing that is changing each loop, even though j and i might 
 				// refer to the same location, it isn't changing from one iteration to the next
 			}
+
+			//find max of converge_array
+			double max_converge = converge_array[0];
+			for(int j = 0; j < i; j++)
+			{
+				if(converge_array[j] > max_converge)
+				{
+					max_converge = converge_array[j];
+				}
+			}
+
+			converge = max(converge, max_converge);
 
 			for (int j = 0; j < i; j++)
 			{
