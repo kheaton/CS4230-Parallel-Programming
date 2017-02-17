@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --time=1:00:00
+#SBATCH --time=2:00:00
 #SBATCH --nodes=1
 #SBATCH --account=CS4230
 #SBATCH --partition=kingspeak-freecycle
@@ -12,8 +12,16 @@ module load [gcc, octave]
 
 python random-matrix.py 512 512
 
-./svd.out $(matrix-size) $(matrix-size) -t -n -do
+./svd.out 512 512 -t -n -do
 octave -q octave-validation.m
 
-./svd-seq.out $(matrix-size) $(matrix-size) -t -n -do 
+./svd-seq.out 512 512 -t -n -do 
+octave -q octave-validation.m
+
+python random-matrix.py 4096 4096
+
+./svd.out 4096 4096 -t -n -do
+octave -q octave-validation.m
+
+./svd-seq.out 4096 4096 -t -n -do 
 octave -q octave-validation.m
