@@ -16,13 +16,13 @@
 #octave -q octave-validation.m
 
 # set data and working directories
-setenv WORKDIR $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2
+#setenv WORKDIR $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2
 
 # load appropriate modules, in this case Intel compilers, MPICH2
-module load [gcc,octave,python] openmpi
+module load openmpi
+module load python/2.7.3
 
 # run the program
 # see below for ways to do this for different MPI distributions
-oythong $WORKDIR/random-matrix.py
-mpirun -np $SLURM_NTASKS $WORKDIR/svd.out 32 32 -t -n -do
-octave -q $WORKDIR/octave-validation.m
+python $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/random-matrix.py 32 32
+mpirun -np $SLURM_NTASKS $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/svd.out 32 32 -t -n -do
