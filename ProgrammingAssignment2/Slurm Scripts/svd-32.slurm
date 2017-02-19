@@ -8,16 +8,6 @@
 #SBATCH -o slurm32-%j.out-%N # name of the stdout, using the job number (%j) and the first node (%N)
 #SBATCH -e slurm32-%j.err-%N # name of the stderr, using job and first node values
 
-#module load gcc octave
-
-#python random-matrix.py 32 32
-
-#./svd.out 32 32 -t -n -do
-#octave -q octave-validation.m
-
-# set data and working directories
-#setenv WORKDIR $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2
-
 # load appropriate modules, in this case Intel compilers, MPICH2
 module load openmpi
 module load python/2.7.3
