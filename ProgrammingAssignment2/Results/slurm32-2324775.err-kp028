@@ -1,8 +1,0 @@
-Lmod has detected the following error: The following module(s) are unknown:
-"octave]" "[gcc,"
-
-Please check the spelling or version number. Also try "module spider ..."
-
-
-/uufs/kingspeak.peaks/sys/var/slurm/slurmd.spool/job2324775/slurm_script: line 15: ./svd-seq.out: No such file or directory
-/uufs/kingspeak.peaks/sys/var/slurm/slurmd.spool/job2324775/slurm_script: line 16: octave: command not found

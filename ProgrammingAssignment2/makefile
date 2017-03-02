@@ -33,24 +33,31 @@ rebuild: clean build
 valid: matrixA.mat matrixScpu.mat matrixUcpu.mat matrixVcpu.mat
 	octave -q octave-validation.m
 
-buildi: matrix
-	icpc -qopenmp -o svd-i.out svd.cpp
-	icpc -o svd-seq-i.out svd.cpp
+validm: matrixA.mat matrixScpu.mat matrixUcpu.mat matrixVcpu.mat
+	matlab -nojvm < matlab-validation.m
 
-runi: buildi
-	./svdi.out $(matrix-size) $(matrix-size) -t -n -do
-
-runsi: buildi
-	./svd-seqi.out $(matrix-size) $(matrix-size) -t -n -do 
-
-runi-v: buildi
-	./svdi.out $(matrix-size) $(matrix-size) -t -p -do
-
-runsi-v: buildi
-	./svd-seqi.out $(matrix-size) $(matrix-size) -t -p -do
-
-run-bothi: runi runsi
-
-run-bothi-v: runi-v runsi-v
-
-rebuildi: clean buildi
+run-all: build
+	./svd.out 32 32 -t -n -do
+	octave -q octave-validation.m
+	./svd-seq.out 32 32 -t -n -do
+	octave -q octave-validation.m
+	./svd.out 64 64 -t -n -do
+	octave -q octave-validation.m
+	./svd-seq.out 64 64 -t -n -do 
+	octave -q octave-validation.m
+	./svd.out 128 128 -t -n -do
+	octave -q octave-validation.m
+	./svd-seq.out 128 128 -t -n -do 
+	octave -q octave-validation.m
+	./svd.out 256 256 -t -n -do
+	octave -q octave-validation.m
+	./svd-seq.out 256 256 -t -n -do 
+	octave -q octave-validation.m
+	./svd.out 512 512 -t -n -do
+	octave -q octave-validation.m
+	./svd-seq.out 512 512 -t -n -do 
+	octave -q octave-validation.m
+	./svd.out 1024 1024 -t -n -do
+	octave -q octave-validation.m
+	./svd-seq.out 1024 1024 -t -n -do 
+	octave -q octave-validation.m

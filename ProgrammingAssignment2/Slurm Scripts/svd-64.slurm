@@ -1,18 +1,39 @@
 #!/bin/bash
 
-#SBATCH --time=0:5:00
+#SBATCH --time=4:00:00
 #SBATCH --nodes=1
+# --account=owner-guest
+# --partition=kingspeak-guest
+
 #SBATCH --account=CS4230
 #SBATCH --partition=kingspeak-freecycle
 
-#SBATCH -o slurm64-%j.out-%N # name of the stdout, using the job number (%j) and the first node (%N)
-#SBATCH -e slurm64-%j.err-%N # name of the stderr, using job and first node values
+#SBATCH --mail-type=END,FAIL 
 
-# load appropriate modules, in this case Intel compilers, MPICH2
-module load openmpi
-module load python/2.7.3
+#SBATCH -o slurm64.out
+#SBATCH -e slurm64.err
 
-# run the program
-# see below for ways to do this for different MPI distributions
-python $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/random-matrix.py 64 64
-mpirun -np $SLURM_NTASKS $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/svd.out 64 64 -t -n -do
+#module load python/2.7.3
+module load matlab
+
+cd $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/
+
+[ ! -d 64-files  ] && mkdir 64-files
+
+cd 64-files
+
+#cp ../matlab-validation.m .
+cp ../random-matrix.py .
+
+python random-matrix.py 64 64
+
+srun g++ -o svd.out ../svd.cpp -fopenmp
+srun g++ -o svd-seq.out ../svd.cpp
+
+#srun ./svd.out 64 64 -t -p -dm
+srun ./svd.out 64 64 -t -n -dm
+#matlab -nojvm < matlab-validation.m
+
+#srun ./svd-seq.out 64 64 -t -p -dm
+srun ./svd-seq.out 64 64 -t -n -dm
+#matlab -nojvm < matlab-validation.m
