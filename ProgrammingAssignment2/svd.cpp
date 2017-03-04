@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <sys/time.h>
+#include "omp.h"
 
 #define epsilon 1.e-8
 
@@ -38,6 +39,10 @@ template <typename T> double sgn(T val)
 }
 
 int main (int argc, char* argv[]) {
+
+	omp_set_dynamic(0);
+	omp_set_num_threads(8);
+
 	int M,N;
 	bool octave; 
 	string T,P,Db;
@@ -138,7 +143,6 @@ int main (int argc, char* argv[]) {
       	}
 	}
 
-  	/* SVD using Jacobi algorithm (Sequencial)*/
   	gettimeofday(&start, NULL);
 
    	double conv;
@@ -146,14 +150,15 @@ int main (int argc, char* argv[]) {
     	converge = 0.0;	
     	acum++;							//counter of loops
 
-    	for(int i = 1; i<M; i++) {
-      		for(int j = 0; j<i; j++) {
+    	for(int i = 1; i < M; i++) {
+			#pragma omp parallel for private(alpha, beta, gamma, zeta, t)
+      		for(int j = 0; j < i; j++) {
 
           		alpha = 0.0;
           		beta = 0.0;
           		gamma = 0.0;
 
-          		for(int k = 0; k<N ; k++) {
+          		for(int k = 0; k < N; k++) {
             		alpha = alpha + (U_t[i][k] * U_t[i][k]);
             		beta = beta + (U_t[j][k] * U_t[j][k]);
             		gamma = gamma + (U_t[i][k] * U_t[j][k]);
@@ -166,25 +171,26 @@ int main (int argc, char* argv[]) {
 
 				zeta = (beta - alpha) / (2.0 * gamma);
 				t = sgn(zeta) / (abs(zeta) + sqrt(1.0 + (zeta*zeta)));	//compute tan of angle
-				c = 1.0 / (sqrt (1.0 + (t*t)));							//extract cos
-				s = c*t;												//extrac sin
+				c = 1.0 / (sqrt (1.0 + (t * t)));							//extract cos
+				s = c * t;												//extrac sin
  
 
 	  			//Apply rotations on U and V
 				for(int k=0; k<N; k++) {
 						t = U_t[i][k];
-						U_t[i][k] = c*t - s*U_t[j][k];
-						U_t[j][k] = s*t + c*U_t[j][k];
+						U_t[i][k] = c * t - s * U_t[j][k];
+						U_t[j][k] = s * t + c * U_t[j][k];
 
 						t = V_t[i][k];
-						V_t[i][k] = c*t - s*V_t[j][k];
-						V_t[j][k] = s*t + c*V_t[j][k];
+						V_t[i][k] = c * t - s * V_t[j][k];
+						V_t[j][k] = s * t + c * V_t[j][k];
 				}
 			}
 		}
 	}
 
   	//Create matrix S
+	#pragma openmp parallel for private(t)
 	for(int i =0; i<M; i++) {
 		t=0;
     	for(int j=0; j<N;j++) {
@@ -192,6 +198,7 @@ int main (int argc, char* argv[]) {
     	}
     	t = sqrt(t);
 
+		#pragma openmp parallel for
 		for(int j=0; j<N;j++) {
       		U_t[i][j] = U_t[i][j] / t;
       		if(i == j) {
@@ -203,10 +210,6 @@ int main (int argc, char* argv[]) {
   	gettimeofday(&end, NULL);
 
  	/************************************************************/
- 	/* Develop SVD Using OpenMP */
-
-	// fix final result
-
   	for(int i =0; i<M; i++) {
     	for(int j =0; j<N; j++) {
       		U[i][j] = U_t[j][i];
