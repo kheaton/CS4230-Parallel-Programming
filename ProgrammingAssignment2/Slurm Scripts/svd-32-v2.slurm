@@ -14,8 +14,8 @@
 #SBATCH --mail-type=END,FAIL 
 #SBATCH --mail-user=kyle.heaton@utah.edu
 
-#SBATCH -o $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/Results/slurm32-v2.out
-#SBATCH -e $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/Results/slurm32-v2.err
+#SBATCH -o slurm32-v2.out
+#SBATCH -e slurm32-v2.err
 
 SIZE="32"
 VERSION="-v2"
