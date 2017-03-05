@@ -20,6 +20,8 @@
 SIZE="64"
 VERSION=""
 
+echo "-------------------------------------------------------------"
+
 cd $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/
 
 [ ! -d ./Files/$SIZE-files  ] && mkdir ./Files/$SIZE-files$VERSION
@@ -35,3 +37,5 @@ srun g++ -o svd-seq.out ../../svd-seq.cpp
 srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm
 
 srun ./svd-seq.out $SIZE $SIZE -t -n -dm
+
+echo "-------------------------------------------------------------"

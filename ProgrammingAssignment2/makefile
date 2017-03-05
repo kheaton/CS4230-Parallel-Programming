@@ -1,10 +1,18 @@
 matrix-size = 512
 
+clean-err-results:
+	rm slurm*.err
+
+clean-out-result:
+	rm slurm*.out
+
+clean-results: clean-out-results clean-err-results
+
 clean-mat:
 	rm *.mat -f
 
 clean: clean-mat
-	rm *.out -f
+	rm *^slurm*.out -f
 	rm matrix -f
 
 matrix:
