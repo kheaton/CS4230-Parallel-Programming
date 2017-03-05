@@ -40,7 +40,7 @@ template <typename T> double sgn(T val)
 
 int main (int argc, char* argv[]) {
 
-	int numberOfThreads = 128;
+	int numberOfThreads = 2;
 
 	omp_set_dynamic(0);
 	omp_set_num_threads(numberOfThreads);
