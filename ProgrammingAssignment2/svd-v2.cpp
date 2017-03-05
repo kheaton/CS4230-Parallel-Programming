@@ -70,7 +70,7 @@ int array_size(T* array)
 
 int main(int argc, char *argv[])
 {
-	int numberOfThreads = 2;
+	int numberOfThreads = 4;
 
 	omp_set_dynamic(0);
 	omp_set_num_threads(numberOfThreads);
