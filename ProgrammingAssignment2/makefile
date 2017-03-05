@@ -3,7 +3,7 @@ matrix-size = 512
 clean-err-results:
 	rm slurm*.err
 
-clean-out-result:
+clean-out-results:
 	rm slurm*.out
 
 clean-results: clean-out-results clean-err-results
