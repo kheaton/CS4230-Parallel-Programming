@@ -27,12 +27,12 @@ cd $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/
 [ ! -d ./Files/$SIZE-files  ] && mkdir ./Files/$SIZE-files$VERSION
 cd ./Files/$SIZE-files$VERSION
 
-cp ../../random-matrix.py .
+cp ../random-matrix.py .
 
 python random-matrix.py $SIZE $SIZE
 
-srun g++ -o svd$VERSION.out ../../svd$VERSION.cpp -fopenmp
-srun g++ -o svd-seq.out ../../svd-seq.cpp
+srun g++ -o svd$VERSION.out ../svd$VERSION.cpp -fopenmp
+srun g++ -o svd-seq.out ../svd-seq.cpp
 
 srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm
 
