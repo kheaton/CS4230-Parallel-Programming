@@ -249,6 +249,7 @@ int main (int argc, char* argv[]){
 
 
   if(T=="-t" || P =="-t"){
+    cout << "Sequiential" << endl;
     cout<<"iterations: "<<acum<<endl;
     elapsedTime = (end.tv_sec - start.tv_sec) * 1000.0;
     elapsedTime += (end.tv_usec - start.tv_usec) / 1000.0;

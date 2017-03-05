@@ -40,8 +40,10 @@ template <typename T> double sgn(T val)
 
 int main (int argc, char* argv[]) {
 
+	int numberOfThreads = 2;
+
 	omp_set_dynamic(0);
-	omp_set_num_threads(8);
+	omp_set_num_threads(numberOfThreads);
 
 	int M,N;
 	bool octave; 
@@ -218,6 +220,7 @@ int main (int argc, char* argv[]) {
 
 	//Output time and iterations
   	if(T=="-t" || P =="-t") {
+		cout << "Parallel: " << numberOfThreads << endl;
     	cout << "iterations: " << acum << endl;
     	elapsedTime = (end.tv_sec - start.tv_sec) * 1000.0;
     	elapsedTime += (end.tv_usec - start.tv_usec) / 1000.0;
