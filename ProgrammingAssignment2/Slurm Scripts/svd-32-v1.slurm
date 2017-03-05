@@ -31,7 +31,7 @@ cp ../random-matrix.py .
 python random-matrix.py $SIZE $SIZE
 
 srun g++ -o svd$VERSION.out ../svd$VERSION.cpp -fopenmp
-srun g++ -o svd-seq$VERSION.out ../svd$VERSION.cpp
+srun g++ -o svd-seq.out ../svd-seq.cpp
 
 srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm
 #matlab -nojvm < matlab-validation.m

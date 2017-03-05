@@ -71,3 +71,32 @@ build4: matrix
 
 run4: build4
 	./svd-v4.out $(matrix-size) $(matrix-size) -t -n -do
+
+batch-all:
+	sbatch svd-32.slurm
+	sbatch svd-32-v1.slurm
+	sbatch svd-32-v2.slurm
+	sbatch svd-64.slurm
+	sbatch svd-64-v1.slurm
+	sbatch svd-64-v2.slurm
+	sbatch svd-128.slurm
+	sbatch svd-128-v1.slurm
+	sbatch svd-128-v2.slurm
+	sbatch svd-256.slurm
+	sbatch svd-256-v1.slurm
+	sbatch svd-256-v2.slurm
+	sbatch svd-512.slurm
+	sbatch svd-512-v1.slurm
+	sbatch svd-512-v2.slurm
+	sbatch svd-1024.slurm
+	sbatch svd-1024-v1.slurm
+	sbatch svd-1024-v2.slurm
+	sbatch svd-2048.slurm
+	sbatch svd-2048-v1.slurm
+	sbatch svd-2048-v2.slurm
+	sbatch svd-4096.slurm
+	sbatch svd-4096-v1.slurm
+	sbatch svd-4096-v2.slurm
+	sbatch svd-8192.slurm
+	sbatch svd-8192-v1.slurm
+	sbatch svd-8192-v2.slurm
