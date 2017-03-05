@@ -151,7 +151,6 @@ int main (int argc, char* argv[]) {
     	acum++;							//counter of loops
 
     	for(int i = 1; i < M; i++) {
-			#pragma omp parallel for private(alpha, beta, gamma, zeta, t)
       		for(int j = 0; j < i; j++) {
 
           		alpha = 0.0;
