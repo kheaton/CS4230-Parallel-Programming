@@ -70,14 +70,10 @@ int array_size(T* array)
 
 int main(int argc, char *argv[])
 {
-	int numberOfThreads = 2;
-
-	omp_set_dynamic(0);
-	omp_set_num_threads(numberOfThreads);
 
     int M, N;
     bool octave;
-    string T, P, Db;
+    string T, P, Db, threads;
     M = atoi(argv[1]);
     N = atoi(argv[2]);
 
@@ -121,9 +117,27 @@ int main(int argc, char *argv[])
 					cout << "Invalid debug option %s" << Db << endl;
 					return 1;
 				}
+
+				threads = argv[6];
+
+				if(threads == "" || threads == null) {
+					cout << "Threads :" << endl;
+				}
+				else {
+					cout << "No input threads" << endl;
+				}
 			}
 		}
     }
+
+  	std::string::size_type sz;   // alias of size_t
+
+	int numberOfThreads = std::stoi (threads, &sz);
+
+	if(numberOfThreads > 0) {
+		omp_set_dynamic(0);
+		omp_set_num_threads(numberOfThreads);
+	}
 
     double **U, **V, *S, **U_t, **V_t, **A;
     double alpha, beta, gamma, zeta, t, sub_zeta, converge;

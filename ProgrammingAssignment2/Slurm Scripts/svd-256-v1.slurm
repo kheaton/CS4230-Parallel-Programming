@@ -34,7 +34,14 @@ python random-matrix.py $SIZE $SIZE
 srun g++ -o svd$VERSION.out ../../svd$VERSION.cpp -fopenmp
 srun g++ -o svd-seq.out ../../svd-seq.cpp
 
-srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm
+srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm -1
+srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm 2
+srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm 4
+srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm 8
+srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm 16
+srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm 32
+srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm 64
+srun ./svd$VERSION.out $SIZE $SIZE -t -n -dm 128
 
 srun ./svd-seq.out $SIZE $SIZE -t -n -dm
 
