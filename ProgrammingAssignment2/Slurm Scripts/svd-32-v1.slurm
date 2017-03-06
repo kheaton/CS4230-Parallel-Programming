@@ -24,7 +24,7 @@ echo "-------------------------------------------------------------"
 
 cd $HOME/CS4230-Parallel-Programming/ProgrammingAssignment2/
 
-[ ! -d $SIZE-files  ] && mkdir $SIZE-files$VERSION
+[ ! -d $SIZE-files$VERSION ] && mkdir $SIZE-files$VERSION
 cd $SIZE-files$VERSION
 
 cp ../random-matrix.py .
