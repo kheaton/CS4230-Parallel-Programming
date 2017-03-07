@@ -28,6 +28,7 @@
 #include <fstream>
 #include <sys/time.h>
 #include "omp.h"
+#include<cstdlib>
 
 #define epsilon 1.e-8
 
@@ -92,9 +93,7 @@ int main (int argc, char* argv[]) {
     	}
   	}
   
-  	std::string::size_type sz;   // alias of size_t
-
-	int numberOfThreads = std::stoi (threads, &sz);
+	int numberOfThreads = std::atoi (threads.c_str());
 
 	if(numberOfThreads > 0) {
 		omp_set_dynamic(0);
