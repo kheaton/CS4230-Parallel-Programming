@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 
 				threads = argv[6];
 
-				if(threads == "" || threads == null) {
+				if(threads == "" || threads == NULL) {
 					cout << "Threads :" << endl;
 				}
 				else {
