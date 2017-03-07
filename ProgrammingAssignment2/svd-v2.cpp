@@ -121,13 +121,7 @@ int main(int argc, char *argv[])
 				}
 
 				threads = argv[6];
-
-				if(threads == "" || threads == NULL) {
-					cout << "Threads :" << endl;
-				}
-				else {
-					cout << "No input threads" << endl;
-				}
+				cout << "Threads :" << threads << endl;
 			}
 		}
     }
