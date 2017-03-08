@@ -84,29 +84,38 @@ batch-all: batch-test
 	sbatch  ./Slurm\ Scripts/svd-512.slurm
 	sbatch  ./Slurm\ Scripts/svd-512-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-512-v2.slurm
+	sbatch  ./Slurm\ Scripts/svd-512-v3.slurm
 	sbatch  ./Slurm\ Scripts/svd-1024.slurm
 	sbatch  ./Slurm\ Scripts/svd-1024-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-1024-v2.slurm
+	sbatch  ./Slurm\ Scripts/svd-1024-v3.slurm
 	sbatch  ./Slurm\ Scripts/svd-2048.slurm
 	sbatch  ./Slurm\ Scripts/svd-2048-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-2048-v2.slurm
+	sbatch  ./Slurm\ Scripts/svd-2048-v3.slurm
 	#sbatch  ./Slurm\ Scripts/svd-4096.slurm
 	#sbatch  ./Slurm\ Scripts/svd-4096-v1.slurm
 	#sbatch  ./Slurm\ Scripts/svd-4096-v2.slurm
+	#sbatch  ./Slurm\ Scripts/svd-4096-v3.slurm
 	#sbatch  ./Slurm\ Scripts/svd-8192.slurm
 	#sbatch  ./Slurm\ Scripts/svd-8192-v1.slurm
 	#sbatch  ./Slurm\ Scripts/svd-8192-v2.slurm
+	#sbatch  ./Slurm\ Scripts/svd-8192-v3.slurm
 
 batch-test:
 	sbatch  ./Slurm\ Scripts/svd-32.slurm
 	sbatch  ./Slurm\ Scripts/svd-32-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-32-v2.slurm
+	sbatch  ./Slurm\ Scripts/svd-32-v3.slurm
 	sbatch  ./Slurm\ Scripts/svd-64.slurm
 	sbatch  ./Slurm\ Scripts/svd-64-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-64-v2.slurm
+	sbatch  ./Slurm\ Scripts/svd-64-v3.slurm
 	sbatch  ./Slurm\ Scripts/svd-128.slurm
 	sbatch  ./Slurm\ Scripts/svd-128-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-128-v2.slurm
+	sbatch  ./Slurm\ Scripts/svd-128-v3.slurm
 	sbatch  ./Slurm\ Scripts/svd-256.slurm
 	sbatch  ./Slurm\ Scripts/svd-256-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-256-v2.slurm
+	sbatch  ./Slurm\ Scripts/svd-256-v3.slurm
