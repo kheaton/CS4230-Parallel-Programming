@@ -57,42 +57,45 @@ validates: runs valid clean-mat
 validate-both: validate validates
 
 build1: matrix
-	g++ -o svd-v1.out svd-v1.cpp -fopenmp
+	g++ -o svd-v1.out svd-v1.cpp -fopenmp -O3 -msse2
 
 run1: build1
 	./svd-v1.out $(matrix-size) $(matrix-size) -t -n -do
 
 build2: matrix
-	g++ -o svd-v2.out svd-v2.cpp -fopenmp
+	g++ -o svd-v2.out svd-v2.cpp -fopenmp -O3 -msse2
 
 run2: build2
 	./svd-v2.out $(matrix-size) $(matrix-size) -t -n -do
 
 build3: matrix
-	g++ -o svd-v3.out svd-v3.cpp -fopenmp
+	g++ -o svd-v3.out svd-v3.cpp -fopenmp -O3 -msse2
 
 run3: build3
 	./svd-v3.out $(matrix-size) $(matrix-size) -t -n -do
 
 build4: matrix
-	g++ -o svd-v4.out svd-v4.cpp -fopenmp
+	g++ -o svd-v4.out svd-v4.cpp -fopenmp -O3 -msse2
 
 run4: build4
 	./svd-v4.out $(matrix-size) $(matrix-size) -t -n -do
 
 batch-all: batch-test
+	sbatch  ./Slurm\ Scripts/svd-512.slurm
+	sbatch  ./Slurm\ Scripts/svd-512-v1.slurm
+	sbatch  ./Slurm\ Scripts/svd-512-v2.slurm
 	sbatch  ./Slurm\ Scripts/svd-1024.slurm
 	sbatch  ./Slurm\ Scripts/svd-1024-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-1024-v2.slurm
 	sbatch  ./Slurm\ Scripts/svd-2048.slurm
 	sbatch  ./Slurm\ Scripts/svd-2048-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-2048-v2.slurm
-	sbatch  ./Slurm\ Scripts/svd-4096.slurm
-	sbatch  ./Slurm\ Scripts/svd-4096-v1.slurm
-	sbatch  ./Slurm\ Scripts/svd-4096-v2.slurm
-	sbatch  ./Slurm\ Scripts/svd-8192.slurm
-	sbatch  ./Slurm\ Scripts/svd-8192-v1.slurm
-	sbatch  ./Slurm\ Scripts/svd-8192-v2.slurm
+	#sbatch  ./Slurm\ Scripts/svd-4096.slurm
+	#sbatch  ./Slurm\ Scripts/svd-4096-v1.slurm
+	#sbatch  ./Slurm\ Scripts/svd-4096-v2.slurm
+	#sbatch  ./Slurm\ Scripts/svd-8192.slurm
+	#sbatch  ./Slurm\ Scripts/svd-8192-v1.slurm
+	#sbatch  ./Slurm\ Scripts/svd-8192-v2.slurm
 
 batch-test:
 	sbatch  ./Slurm\ Scripts/svd-32.slurm
@@ -107,6 +110,3 @@ batch-test:
 	sbatch  ./Slurm\ Scripts/svd-256.slurm
 	sbatch  ./Slurm\ Scripts/svd-256-v1.slurm
 	sbatch  ./Slurm\ Scripts/svd-256-v2.slurm
-	sbatch  ./Slurm\ Scripts/svd-512.slurm
-	sbatch  ./Slurm\ Scripts/svd-512-v1.slurm
-	sbatch  ./Slurm\ Scripts/svd-512-v2.slurm
